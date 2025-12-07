@@ -1,0 +1,17 @@
+![Infrastructure Design](https://imgur.com/7i1loCP.jpg)
+
+## Specifics About This Infrastructure
+
+* **Server**: A server is a physical or virtual computer that provides services, data, or resources to other computers (clients) over a network. In this setup, it hosts the entire web stack.
+* **Domain Name**: A human-readable address (like `foobar.com`) used to access the website instead of remembering the numerical IP address (`8.8.8.8`).
+* **DNS Record `www`**: The `www` record is an **A record** (Address Record) that maps the hostname `www.foobar.com` directly to the server's IP address (`8.8.8.8`).
+* **Web Server (Nginx)**: The web server accepts HTTP requests from the user's browser. It serves static content (HTML, CSS, images) directly and passes dynamic requests to the application server.
+* **Application Server**: The application server executes the backend logic (code base). It processes dynamic content, interacts with the database, and generates the HTML pages to be sent back to the user.
+* **Database (MySQL)**: The database stores and organizes the application's data (e.g., user profiles, posts, products) in a structured way, allowing the application server to retrieve or update information.
+* **Communication**: The server communicates with the user's computer using the **HTTP** (Hypertext Transfer Protocol) over **TCP/IP**.
+
+## Issues With This Infrastructure
+
+* **SPOF (Single Point of Failure)**: The entire infrastructure resides on a single server. If this server fails, crashes, or loses network connection, the entire website goes offline. There is no redundancy.
+* **Downtime When Maintenance Needed**: To update software, patch the OS, or deploy new code, the server (or services like Nginx/MySQL) often needs to be restarted. During this maintenance window, the website will be unavailable to users.
+* **Cannot Scale**: As a single server, it has limited resources (CPU, RAM, Disk). If incoming traffic increases significantly, the server will become overloaded and slow down or crash. It cannot scale horizontally (adding more servers) in this current setup.
