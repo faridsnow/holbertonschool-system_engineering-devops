@@ -1,0 +1,17 @@
+![Distributed Web Infrastructure](LINK_TO_YOUR_DIAGRAM_IMAGE)
+
+## Specifics About This Infrastructure
+
+* **Load Balancer (HAproxy)**: Added to distribute incoming network traffic across multiple servers. This ensures no single server bears too much load, improving responsiveness and availability.
+* **Distribution Algorithm (Round Robin)**: The load balancer is configured with the **Round Robin** algorithm. It works by forwarding requests to each server in turn (e.g., Request 1 to Server A, Request 2 to Server B, Request 3 to Server A). It is simple and ensures equal distribution.
+* **Active-Active Setup**: This infrastructure uses an **Active-Active** setup because the load balancer distributes traffic to both servers, and both are handling requests simultaneously. In an Active-Passive setup, the secondary server would sit idle and only activate if the primary failed.
+* **Database Primary-Replica (Master-Slave) Cluster**: In this cluster, one database node is the **Primary** (Master) and the other is the **Replica** (Slave). Data written to the Primary is automatically copied (replicated) to the Replica.
+* **Primary vs Replica**: The **Primary** node handles all **Write** operations (INSERT, UPDATE, DELETE). The **Replica** node handles **Read** operations (SELECT). This reduces the load on the Primary.
+
+## Issues With This Infrastructure
+
+* **SPOF (Single Point of Failure)**: The **Load Balancer** is a SPOF. If the load balancer fails, the entire website becomes inaccessible, even if the web servers are functioning perfectly.
+* **Security Issues**:
+    * **No Firewall**: There is no firewall filtering traffic, leaving servers vulnerable to unauthorized access and attacks.
+    * **No HTTPS**: Traffic is transmitted over HTTP (unencrypted). Sensitive data (like passwords) can be intercepted by hackers (Man-in-the-Middle attack).
+* **No Monitoring**: There is no mechanism to track server health, CPU usage, or disk space. If a server crashes or gets overloaded, administrators will not be notified immediately.
