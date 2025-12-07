@@ -1,0 +1,15 @@
+![Secured and Monitored Web Infrastructure](LINK_TO_YOUR_DIAGRAM_IMAGE)
+
+## Specifics About This Infrastructure
+
+* **Firewalls**: Added to secure the network by filtering incoming and outgoing traffic based on predefined security rules. They act as a barrier between the internal network and the internet, blocking unauthorized access (e.g., only allowing port 443/80).
+* **SSL Certificate (HTTPS)**: Used to encrypt the traffic between the user's browser and the server. This ensures data privacy and integrity, preventing Man-in-the-Middle attacks where attackers could intercept sensitive information.
+* **Monitoring Clients**: Installed on each server to collect metrics (CPU, RAM, Disk usage) and logs. This data is sent to a central monitoring service (like Sumologic or Datadog) to visualize performance and alert administrators of issues.
+* **Data Collection**: The monitoring tool uses agents running on the servers to query system stats (e.g., via /proc file system) and application logs, then pushes this data to the monitoring server.
+* **Monitoring QPS**: To monitor QPS (Queries Per Second) on the web server, the monitoring agent would parse Nginx access logs or status pages (like stub_status module) to count the number of requests received per second.
+
+## Issues With This Infrastructure
+
+* **Terminating SSL at Load Balancer**: Decrypting HTTPS traffic at the Load Balancer level means traffic between the Load Balancer and the Web Servers is unencrypted (HTTP). If an attacker breaches the internal network, they can sniff this traffic.
+* **One MySQL Write Server**: Having only one Primary database node creates a bottleneck for write operations and remains a Single Point of Failure for writes. If the Primary fails, no new data can be saved until a Replica is promoted.
+* **Servers with All Components**: Placing the Web Server, Application Server, and Database on the same physical/virtual machine consumes shared resources. If one component spikes in resource usage (e.g., a heavy database query), it can slow down or crash the web server, affecting the entire application.
