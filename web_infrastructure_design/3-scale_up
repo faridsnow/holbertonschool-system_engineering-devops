@@ -1,0 +1,15 @@
+![Scale Up Infrastructure](LINK_TO_YOUR_DIAGRAM_IMAGE)
+
+## Specifics About This Infrastructure
+
+* **Load Balancer Cluster (HAproxy)**: Added a second Load Balancer to create a high-availability cluster (usually Active-Passive using tools like Keepalived). This eliminates the Load Balancer as a Single Point of Failure (SPOF). If the primary load balancer fails, the secondary one takes over immediately.
+* **Split Components**:
+    * **Web Server Layer**: Dedicated servers running only Nginx. They handle HTTP requests and serve static content. Separation allows independent scaling (e.g., adding more web servers if traffic spikes) and prevents resource contention with the app/database.
+    * **Application Server Layer**: Dedicated servers running the application logic. This ensures that heavy processing scripts do not slow down the web servers or the database.
+    * **Database Layer**: Dedicated servers for MySQL (Primary-Replica). Databases are resource-intensive (I/O, RAM), so isolating them ensures performance stability and data integrity.
+
+## Why Add These Elements?
+
+* **Additional Server**: Used to separate components onto their own hardware/VMs. This prevents one component (e.g., a memory leak in the app) from crashing the entire stack (e.g., taking down the database).
+* **Load Balancer Cluster**: To ensure redundancy at the entry point of the network. A single load balancer is a critical point of failure; a cluster guarantees uptime.
+* **Splitting Components**: To achieve **Decoupling**. It allows each layer to be optimized, secured, and scaled independently according to its specific needs.
